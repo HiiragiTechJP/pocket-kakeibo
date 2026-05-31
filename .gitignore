@@ -34,12 +34,14 @@ yarn-error.log*
 
 # env files (secrets must never be committed)
 .env
+.env.*
+!.env.example
+
+# local env overrides (redundant with .env.* but explicit)
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env*.local
-!.env.example
 
 # vercel
 .vercel
@@ -56,3 +58,11 @@ next-env.d.ts
 # supabase local dev (CLI)
 supabase/.branches
 supabase/.temp
+
+# OS / editor junk
+*.swp
+*.swo
+*~
+
+# OneDrive / sync conflict copies
+*conflict*

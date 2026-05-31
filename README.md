@@ -43,6 +43,8 @@ npm run dev
 
 Supabase 側では `supabase/seed-categories.sql` と `supabase/rls-auth.sql` を SQL Editor で実行してください。
 
+ログインメールのテンプレートは `supabase/email-template-login-otp.html` をコピーし、Dashboard → Authentication → Email Templates → Magic Link に貼り付けます（リポジトリへの push だけではメールは変わりません）。
+
 ## ライセンス
 
 Private
