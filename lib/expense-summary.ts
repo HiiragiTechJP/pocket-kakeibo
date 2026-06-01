@@ -1,6 +1,6 @@
-import { EXPENSE_CATEGORIES } from "@/lib/categories";
+import { getCategoryById } from "@/lib/categories";
 import { isDateInMonth } from "@/lib/format";
-import type { ExpenseRecord } from "@/lib/types";
+import type { CategoryRecord, ExpenseRecord } from "@/lib/types";
 
 export type CategorySummaryItem = {
   id: string;
@@ -21,6 +21,7 @@ export function calculateExpenseTotal(expenses: ExpenseRecord[]): number {
 
 export function buildCategorySummary(
   expenses: ExpenseRecord[],
+  categories: CategoryRecord[],
 ): CategorySummaryItem[] {
   const totals = new Map<string, number>();
 
@@ -31,9 +32,17 @@ export function buildCategorySummary(
     );
   }
 
-  return EXPENSE_CATEGORIES.map((category) => ({
-    id: category.id,
-    name: category.name,
-    amount: totals.get(category.id) ?? 0,
-  })).filter((category) => category.amount > 0);
+  const items: CategorySummaryItem[] = [];
+
+  for (const [categoryId, amount] of totals) {
+    if (amount <= 0) continue;
+    const category = getCategoryById(categories, categoryId);
+    items.push({
+      id: categoryId,
+      name: category?.name ?? "未分類",
+      amount,
+    });
+  }
+
+  return items.sort((a, b) => b.amount - a.amount);
 }

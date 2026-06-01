@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { EXPENSE_CATEGORIES } from "@/lib/categories";
+import { getPreferredCategoryId } from "@/lib/categories";
 import { getMonthDefaultDate } from "@/lib/format";
-import type { ExpenseInsert } from "@/lib/types";
+import type { CategoryRecord, ExpenseInsert } from "@/lib/types";
 
 type Props = {
+  categories: CategoryRecord[];
   onAdd: (input: ExpenseInsert) => void | Promise<void>;
   selectedMonth: string;
   disabled?: boolean;
@@ -15,12 +16,15 @@ const inputClassName =
   "rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none ring-sky-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50";
 
 export function AddExpenseForm({
+  categories,
   onAdd,
   selectedMonth,
   disabled = false,
 }: Props) {
   const [amount, setAmount] = useState("");
-  const [categoryId, setCategoryId] = useState(EXPENSE_CATEGORIES[0].id);
+  const [categoryId, setCategoryId] = useState(() =>
+    getPreferredCategoryId(categories),
+  );
   const [date, setDate] = useState(() => getMonthDefaultDate(selectedMonth));
   const [memo, setMemo] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +33,14 @@ export function AddExpenseForm({
   useEffect(() => {
     setDate(getMonthDefaultDate(selectedMonth));
   }, [selectedMonth]);
+
+  useEffect(() => {
+    if (categories.length === 0) return;
+    setCategoryId((prev) => {
+      if (categories.some((c) => c.id === prev)) return prev;
+      return getPreferredCategoryId(categories);
+    });
+  }, [categories]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -107,7 +119,7 @@ export function AddExpenseForm({
             onChange={(e) => setCategoryId(e.target.value)}
             className={inputClassName}
           >
-            {EXPENSE_CATEGORIES.map((c) => (
+            {categories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>

@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { AddExpenseForm } from "@/components/add-expense-form";
+import { CategoryManager } from "@/components/category-manager";
 import { ExpenseList } from "@/components/expense-list";
+import { useCategories } from "@/hooks/use-categories";
 import { useExpenses } from "@/hooks/use-expenses";
 import {
   buildCategorySummary,
@@ -18,17 +20,35 @@ import {
 
 export function KakeiboApp() {
   const {
+    categories,
+    isReady: categoriesReady,
+    error: categoriesError,
+    savingId: categorySavingId,
+    deletingId: categoryDeletingId,
+    isReordering: categoryIsReordering,
+    addCategory,
+    editCategory,
+    removeCategory,
+    reorderCategories,
+  } = useCategories();
+
+  const {
     expenses,
     addExpense,
     editExpense,
     removeExpense,
-    isReady,
-    error,
+    reload: reloadExpenses,
+    isReady: expensesReady,
+    error: expensesError,
     deletingId,
     updatingId,
   } = useExpenses();
+
   const currentMonth = todayIsoMonth();
   const [selectedMonth, setSelectedMonth] = useState(() => currentMonth);
+
+  const isReady = categoriesReady && expensesReady;
+  const error = categoriesError ?? expensesError;
 
   const monthlyExpenses = useMemo(
     () => filterExpensesByMonth(expenses, selectedMonth),
@@ -41,12 +61,17 @@ export function KakeiboApp() {
   );
 
   const categorySummary = useMemo(
-    () => buildCategorySummary(monthlyExpenses),
-    [monthlyExpenses],
+    () => buildCategorySummary(monthlyExpenses, categories),
+    [monthlyExpenses, categories],
   );
 
   const selectedMonthLabel = formatMonthJa(selectedMonth);
   const isCurrentMonthSelected = selectedMonth === currentMonth;
+
+  async function handleRemoveCategory(id: string) {
+    await removeCategory(id);
+    await reloadExpenses();
+  }
 
   return (
     <main className="mx-auto flex w-full max-w-lg flex-col gap-6">
@@ -123,13 +148,31 @@ export function KakeiboApp() {
         </div>
       </section>
 
+      <CategoryManager
+        categories={categories}
+        disabled={!isReady}
+        savingId={categorySavingId}
+        deletingId={categoryDeletingId}
+        onAdd={async (name) => {
+          await addCategory({ name });
+        }}
+        onEdit={async (id, name) => {
+          await editCategory(id, { name });
+        }}
+        onDelete={handleRemoveCategory}
+        onReorder={reorderCategories}
+        isReordering={categoryIsReordering}
+      />
+
       <AddExpenseForm
+        categories={categories}
         onAdd={addExpense}
         selectedMonth={selectedMonth}
         disabled={!isReady}
       />
       <ExpenseList
         expenses={monthlyExpenses}
+        categories={categories}
         totalAmount={monthlyTotal}
         selectedMonthLabel={selectedMonthLabel}
         isReady={isReady}

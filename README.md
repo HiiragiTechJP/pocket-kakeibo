@@ -6,6 +6,7 @@
 
 - メール確認コードによるログイン
 - 支出の追加・編集・削除
+- ユーザーごとのカテゴリ（作成・名前変更・削除・ドラッグ並び替え。「未分類」は削除不可）
 - 月別表示とカテゴリ別集計
 - メモ入力
 
@@ -41,9 +42,7 @@ npm run dev
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase プロジェクト URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon キー |
 
-Supabase 側では `supabase/seed-categories.sql` と `supabase/rls-auth.sql` を SQL Editor で実行してください。
-
-ログインメールのテンプレートは `supabase/email-template-login-otp.html` をコピーし、Dashboard → Authentication → Email Templates → Magic Link に貼り付けます（リポジトリへの push だけではメールは変わりません）。
+Supabase 側の手動セットアップは **`supabase/README.md`** を参照（`rls-auth.sql` → `categories-setup.sql` の順、メールテンプレは HTML を Dashboard に貼り付け）。
 
 ## ライセンス
 

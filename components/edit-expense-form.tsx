@@ -1,11 +1,11 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { EXPENSE_CATEGORIES } from "@/lib/categories";
-import type { ExpenseRecord, ExpenseUpdate } from "@/lib/types";
+import type { CategoryRecord, ExpenseRecord, ExpenseUpdate } from "@/lib/types";
 
 type Props = {
   expense: ExpenseRecord;
+  categories: CategoryRecord[];
   onSave: (input: ExpenseUpdate) => void | Promise<void>;
   onCancel: () => void;
   isSaving: boolean;
@@ -16,6 +16,7 @@ const inputClassName =
 
 export function EditExpenseForm({
   expense,
+  categories,
   onSave,
   onCancel,
   isSaving,
@@ -105,7 +106,7 @@ export function EditExpenseForm({
           onChange={(e) => setCategoryId(e.target.value)}
           className={inputClassName}
         >
-          {EXPENSE_CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <option key={c.id} value={c.id}>
               {c.name}
             </option>

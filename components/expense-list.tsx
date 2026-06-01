@@ -4,10 +4,11 @@ import { useState } from "react";
 import { EditExpenseForm } from "@/components/edit-expense-form";
 import { getCategoryById } from "@/lib/categories";
 import { formatDateJa, formatYen } from "@/lib/format";
-import type { ExpenseRecord, ExpenseUpdate } from "@/lib/types";
+import type { CategoryRecord, ExpenseRecord, ExpenseUpdate } from "@/lib/types";
 
 type Props = {
   expenses: ExpenseRecord[];
+  categories: CategoryRecord[];
   totalAmount: number;
   selectedMonthLabel: string;
   isReady: boolean;
@@ -19,6 +20,7 @@ type Props = {
 
 export function ExpenseList({
   expenses,
+  categories,
   totalAmount,
   selectedMonthLabel,
   isReady,
@@ -30,7 +32,7 @@ export function ExpenseList({
   const [editingId, setEditingId] = useState<string | null>(null);
 
   async function handleDelete(expense: ExpenseRecord) {
-    const category = getCategoryById(expense.category_id);
+    const category = getCategoryById(categories, expense.category_id);
     const label = category?.name ?? "未分類";
     const confirmed = window.confirm(
       `${label}（${formatYen(expense.amount)}）を削除しますか？`,
@@ -78,7 +80,7 @@ export function ExpenseList({
       ) : (
         <ul className="divide-y divide-slate-100 dark:divide-slate-800">
           {expenses.map((expense) => {
-            const category = getCategoryById(expense.category_id);
+            const category = getCategoryById(categories, expense.category_id);
             const isEditing = editingId === expense.id;
             const isDeleting = deletingId === expense.id;
             const isSavingThis = updatingId === expense.id;
@@ -91,6 +93,7 @@ export function ExpenseList({
                 {isEditing ? (
                   <EditExpenseForm
                     expense={expense}
+                    categories={categories}
                     onSave={(input) => handleSaveEdit(expense, input)}
                     onCancel={() => setEditingId(null)}
                     isSaving={isSavingThis}

@@ -36,13 +36,17 @@ export function useExpenses() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
+  const reload = useCallback(async () => {
+    const data = await fetchExpenses();
+    setExpenses(sortExpenses(data));
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       try {
-        const data = await fetchExpenses();
-        if (!cancelled) setExpenses(sortExpenses(data));
+        await reload();
       } catch (err) {
         if (!cancelled) {
           setError(toErrorMessage(err, "支出の読み込みに失敗しました"));
@@ -56,7 +60,7 @@ export function useExpenses() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reload]);
 
   const addExpense = useCallback(async (input: ExpenseInsert) => {
     setError(null);
@@ -111,6 +115,7 @@ export function useExpenses() {
     addExpense,
     editExpense,
     removeExpense,
+    reload,
     isReady,
     error,
     deletingId,

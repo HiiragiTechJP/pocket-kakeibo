@@ -12,8 +12,21 @@ export type ExpenseRecord = {
 /** Supabase の categories テーブルに合わせた型 */
 export type CategoryRecord = {
   id: string;
+  user_id: string;
   name: string;
   type: "expense";
+  is_system: boolean;
+  sort_order: number;
+  created_at: string;
+};
+
+export type CategoryInsert = {
+  name: string;
+  type?: "expense";
+};
+
+export type CategoryUpdate = {
+  name: string;
 };
 
 export type ExpenseInsert = Pick<
