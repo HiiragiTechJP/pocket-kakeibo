@@ -2,24 +2,18 @@
 
 import { FormEvent, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import {
+  AUTH_EMAIL_INVALID_MESSAGE,
+  isValidEmailFormat,
+  toResendEmailErrorMessage,
+  toSendEmailErrorMessage,
+  toVerifyOtpErrorMessage,
+} from "@/lib/auth-messages";
 
 const OTP_LENGTH = 6;
 
 const inputClassName =
   "rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none ring-sky-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50";
-
-function toAuthErrorMessage(error: unknown, fallback: string): string {
-  if (error && typeof error === "object" && "message" in error) {
-    const message = (error as { message: unknown }).message;
-    if (typeof message === "string" && message.length > 0) {
-      if (message.includes("expired") || message.includes("invalid")) {
-        return "コードの有効期限が切れたか、間違っています。もう一度送信して新しいコードを入力してください。";
-      }
-      return message;
-    }
-  }
-  return fallback;
-}
 
 export function AuthForm() {
   const { sendEmailOtp, verifyEmailOtp } = useAuth();
@@ -38,6 +32,10 @@ export function AuthForm() {
       setError("メールアドレスを入力してください");
       return;
     }
+    if (!isValidEmailFormat(trimmed)) {
+      setError(AUTH_EMAIL_INVALID_MESSAGE);
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -45,7 +43,7 @@ export function AuthForm() {
       setCode("");
       setStep("code");
     } catch (err) {
-      setError(toAuthErrorMessage(err, "確認コードの送信に失敗しました"));
+      setError(toSendEmailErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -65,7 +63,7 @@ export function AuthForm() {
     try {
       await verifyEmailOtp(email.trim(), token);
     } catch (err) {
-      setError(toAuthErrorMessage(err, "ログインに失敗しました"));
+      setError(toVerifyOtpErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -78,7 +76,7 @@ export function AuthForm() {
       await sendEmailOtp(email.trim());
       setCode("");
     } catch (err) {
-      setError(toAuthErrorMessage(err, "確認コードの再送信に失敗しました"));
+      setError(toResendEmailErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
