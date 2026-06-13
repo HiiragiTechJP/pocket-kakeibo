@@ -1,12 +1,14 @@
 "use client";
 
-import { formatMonthJa, shiftIsoMonth } from "@/lib/format";
+import { compareIsoMonth, formatMonthJa, shiftIsoMonth } from "@/lib/format";
 
 type Props = {
   selectedMonth: string;
   currentMonth: string;
   onChange: (month: string) => void;
   variant?: "card" | "plain";
+  minMonth?: string;
+  maxMonth?: string;
 };
 
 export function MonthPicker({
@@ -14,9 +16,16 @@ export function MonthPicker({
   currentMonth,
   onChange,
   variant = "plain",
+  minMonth,
+  maxMonth,
 }: Props) {
   const label = formatMonthJa(selectedMonth);
-  const isCurrentMonth = selectedMonth === currentMonth;
+  const effectiveMaxMonth = maxMonth ?? currentMonth;
+  const canGoPrev = minMonth
+    ? compareIsoMonth(selectedMonth, minMonth) > 0
+    : true;
+  const canGoNext =
+    compareIsoMonth(selectedMonth, effectiveMaxMonth) < 0;
 
   const wrapClass =
     variant === "card"
@@ -39,7 +48,8 @@ export function MonthPicker({
         type="button"
         onClick={() => onChange(shiftIsoMonth(selectedMonth, -1))}
         aria-label="前の月を表示"
-        className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors ${btnClass}`}
+        disabled={!canGoPrev}
+        className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors disabled:cursor-not-allowed ${btnClass}`}
       >
         ←
       </button>
@@ -52,7 +62,7 @@ export function MonthPicker({
         type="button"
         onClick={() => onChange(shiftIsoMonth(selectedMonth, 1))}
         aria-label="次の月を表示"
-        disabled={isCurrentMonth}
+        disabled={!canGoNext}
         className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold transition-colors disabled:cursor-not-allowed ${btnClass}`}
       >
         →

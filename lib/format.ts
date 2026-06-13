@@ -29,6 +29,10 @@ export function isDateInMonth(isoDate: string, isoMonth: string): boolean {
   return isoDate.startsWith(`${isoMonth}-`);
 }
 
+export function compareIsoMonth(a: string, b: string): number {
+  return a.localeCompare(b);
+}
+
 export function shiftIsoMonth(isoMonth: string, diff: number): string {
   const [year, month] = isoMonth.split("-").map(Number);
   if (!year || !month) return isoMonth;
