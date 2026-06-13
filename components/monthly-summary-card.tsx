@@ -39,21 +39,21 @@ export function MonthlySummaryCard({
             {selectedMonthLabel}の収支
           </p>
           <p
-            className={`mt-1 text-3xl font-bold tabular-nums tracking-tight ${
+            className={`mt-1 whitespace-nowrap text-3xl font-bold tabular-nums tracking-tight ${
               isReady && balance < 0 ? "text-amber-100" : ""
             }`}
           >
             {isReady ? formatYen(balance) : "—"}
           </p>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/80">
-            <span>
+          <div className="mt-2 flex flex-col gap-1 text-sm text-white/80 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-1">
+            <span className="whitespace-nowrap">
               収入{" "}
               <span className="font-medium text-white">
                 {isReady ? formatYen(incomeTotal) : "—"}
               </span>
               {isReady ? ` · ${incomeCount}件` : null}
             </span>
-            <span>
+            <span className="whitespace-nowrap">
               支出{" "}
               <span className="font-medium text-white">
                 {isReady ? formatYen(expenseTotal) : "—"}

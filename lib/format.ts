@@ -1,8 +1,15 @@
 export function formatYen(amount: number): string {
-  return new Intl.NumberFormat("ja-JP", {
+  const formatter = new Intl.NumberFormat("ja-JP", {
     style: "currency",
     currency: "JPY",
-  }).format(amount);
+  });
+
+  if (amount < 0) {
+    const positive = formatter.format(-amount);
+    return positive.replace(/^(\uFFE5|\u00A5)/, "$&-");
+  }
+
+  return formatter.format(amount);
 }
 
 export function formatDateJa(isoDate: string): string {
