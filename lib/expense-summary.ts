@@ -1,6 +1,6 @@
 import { getCategoryById } from "@/lib/categories";
 import { isDateInMonth } from "@/lib/format";
-import type { CategoryRecord, ExpenseRecord } from "@/lib/types";
+import type { CategoryRecord, ExpenseRecord, IncomeRecord } from "@/lib/types";
 
 export type CategorySummaryItem = {
   id: string;
@@ -23,8 +23,24 @@ export function filterExpensesByCategory(
   return expenses.filter((expense) => expense.category_id === categoryId);
 }
 
-export function calculateExpenseTotal(expenses: ExpenseRecord[]): number {
-  return expenses.reduce((sum, expense) => sum + expense.amount, 0);
+export function filterIncomesByMonth(
+  incomes: IncomeRecord[],
+  isoMonth: string,
+): IncomeRecord[] {
+  return incomes.filter((income) => isDateInMonth(income.date, isoMonth));
+}
+
+export function calculateMonthlyBalance(
+  incomeTotal: number,
+  expenseTotal: number,
+): number {
+  return incomeTotal - expenseTotal;
+}
+
+export function calculateExpenseTotal(
+  items: { amount: number }[],
+): number {
+  return items.reduce((sum, item) => sum + item.amount, 0);
 }
 
 export function buildCategorySummary(

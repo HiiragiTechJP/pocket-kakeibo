@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import { HomePage } from "@/components/home-page";
+import { IncomePage } from "@/components/income-page";
 import { PageLoading } from "@/components/page-loading";
 
-export default function AppPage() {
+export default function IncomeRoutePage() {
   return (
     <Suspense fallback={<PageLoading />}>
-      <HomePage />
+      <IncomePage />
     </Suspense>
   );
 }

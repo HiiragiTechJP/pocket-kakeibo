@@ -35,3 +35,17 @@ export type ExpenseInsert = Pick<
 >;
 
 export type ExpenseUpdate = ExpenseInsert;
+
+/** Supabase の incomes テーブルに合わせた型 */
+export type IncomeRecord = {
+  id: string;
+  user_id: string;
+  amount: number;
+  date: string;
+  memo: string | null;
+  created_at: string;
+};
+
+export type IncomeInsert = Pick<IncomeRecord, "amount" | "date" | "memo">;
+
+export type IncomeUpdate = IncomeInsert;

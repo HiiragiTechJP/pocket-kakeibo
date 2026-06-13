@@ -8,6 +8,7 @@ Dashboard の **SQL Editor** で実行するスクリプトです。`git push` �
 |----|----------|------|
 | 1 | `rls-auth.sql` | 認証・支出の RLS |
 | 2 | `categories-setup.sql` | カテゴリ一式（未分類・ユーザー別・並び替え列） |
+| 3 | `incomes-setup.sql` | 収入テーブルと RLS |
 
 各ファイルを **全文コピー** → SQL Editor → **Run**（1ファイル＝1回）。
 
@@ -18,6 +19,7 @@ Dashboard の **SQL Editor** で実行するスクリプトです。`git push` �
 | 状況 | 対応 |
 |------|------|
 | カテゴリ①〜③済み・並び替えで 400（`sort_order` なし） | `categories-setup.sql` の **「並び順」ブロックだけ** Run |
+| 収入機能を追加するとき | `incomes-setup.sql` を 1 回 Run |
 | OTP メール | `email-template-login-otp.html` を Magic Link に貼り付け（件名: `ポケット家計簿 — ログインコード`）。Custom SMTP は **OFF** のまま Save |
 
 ## 確認用 SQL（任意）

@@ -19,6 +19,7 @@ type Props = {
   onDelete: (id: string) => void | Promise<void>;
   onReorder: (orderedCustomIds: string[]) => void | Promise<void>;
   isReordering?: boolean;
+  defaultOpen?: boolean;
 };
 
 const inputClassName =
@@ -34,13 +35,14 @@ export function CategoryManager({
   onDelete,
   onReorder,
   isReordering = false,
+  defaultOpen = false,
 }: Props) {
   const [newName, setNewName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isReorderMode, setIsReorderMode] = useState(false);
   const [draftCustom, setDraftCustom] = useState<CategoryRecord[]>([]);
 
