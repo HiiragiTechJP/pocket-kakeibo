@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EditExpenseForm } from "@/components/edit-expense-form";
 import { getCategoryById } from "@/lib/categories";
+import {
+  calculateExpenseTotal,
+  filterExpensesByCategory,
+} from "@/lib/expense-summary";
 import { formatDateJa, formatYen } from "@/lib/format";
 import type { CategoryRecord, ExpenseRecord, ExpenseUpdate } from "@/lib/types";
 
@@ -30,6 +34,30 @@ export function ExpenseList({
   deletingId,
 }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [filterCategoryId, setFilterCategoryId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFilterCategoryId(null);
+  }, [selectedMonthLabel]);
+
+  const filterOptions = useMemo(() => {
+    const usedIds = new Set(expenses.map((e) => e.category_id));
+    return categories.filter((c) => usedIds.has(c.id));
+  }, [expenses, categories]);
+
+  const filteredExpenses = useMemo(
+    () => filterExpensesByCategory(expenses, filterCategoryId),
+    [expenses, filterCategoryId],
+  );
+
+  const filteredTotal = useMemo(
+    () => calculateExpenseTotal(filteredExpenses),
+    [filteredExpenses],
+  );
+
+  const activeFilterName = filterCategoryId
+    ? getCategoryById(categories, filterCategoryId)?.name
+    : null;
 
   async function handleDelete(expense: ExpenseRecord) {
     const category = getCategoryById(categories, expense.category_id);
@@ -55,19 +83,71 @@ export function ExpenseList({
     }
   }
 
+  const showFilter = isReady && expenses.length > 0 && filterOptions.length > 1;
+
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-md shadow-slate-200/70 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-950/30">
-      <div className="mb-4 flex items-end justify-between gap-2">
+      <div className="mb-3 flex items-end justify-between gap-2">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
           支出一覧
         </h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          合計{" "}
-          <span className="font-semibold text-sky-700 dark:text-sky-300">
-            {formatYen(totalAmount)}
-          </span>
-        </p>
+        <div className="text-right text-sm text-slate-500 dark:text-slate-400">
+          {filterCategoryId ? (
+            <>
+              <span className="block text-xs">{activeFilterName}</span>
+              <span className="font-semibold text-sky-700 dark:text-sky-300">
+                {formatYen(filteredTotal)}
+              </span>
+              <span className="ml-1 text-xs">
+                / {filteredExpenses.length}件
+              </span>
+            </>
+          ) : (
+            <>
+              合計{" "}
+              <span className="font-semibold text-sky-700 dark:text-sky-300">
+                {formatYen(totalAmount)}
+              </span>
+            </>
+          )}
+        </div>
       </div>
+
+      {showFilter ? (
+        <div
+          className="-mx-1 mb-3 flex gap-1.5 overflow-x-auto px-1 pb-1"
+          role="group"
+          aria-label="カテゴリで絞り込み"
+        >
+          <button
+            type="button"
+            onClick={() => setFilterCategoryId(null)}
+            aria-pressed={filterCategoryId === null}
+            className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              filterCategoryId === null
+                ? "bg-sky-600 text-white"
+                : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+            }`}
+          >
+            すべて
+          </button>
+          {filterOptions.map((category) => (
+            <button
+              key={category.id}
+              type="button"
+              onClick={() => setFilterCategoryId(category.id)}
+              aria-pressed={filterCategoryId === category.id}
+              className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                filterCategoryId === category.id
+                  ? "bg-sky-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              }`}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
+      ) : null}
 
       {!isReady ? (
         <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
@@ -77,9 +157,13 @@ export function ExpenseList({
         <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
           {selectedMonthLabel}の支出はまだありません。上のフォームから追加してください。
         </p>
+      ) : filteredExpenses.length === 0 ? (
+        <p className="py-8 text-center text-sm text-slate-500 dark:text-slate-400">
+          「{activeFilterName}」の支出はありません。
+        </p>
       ) : (
         <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-          {expenses.map((expense) => {
+          {filteredExpenses.map((expense) => {
             const category = getCategoryById(categories, expense.category_id);
             const isEditing = editingId === expense.id;
             const isDeleting = deletingId === expense.id;

@@ -15,6 +15,14 @@ export function filterExpensesByMonth(
   return expenses.filter((expense) => isDateInMonth(expense.date, isoMonth));
 }
 
+export function filterExpensesByCategory(
+  expenses: ExpenseRecord[],
+  categoryId: string | null,
+): ExpenseRecord[] {
+  if (!categoryId) return expenses;
+  return expenses.filter((expense) => expense.category_id === categoryId);
+}
+
 export function calculateExpenseTotal(expenses: ExpenseRecord[]): number {
   return expenses.reduce((sum, expense) => sum + expense.amount, 0);
 }
