@@ -7,6 +7,7 @@ import {
   MAX_CATEGORY_NAME_LENGTH,
   splitCategories,
 } from "@/lib/categories";
+import { formInputClass } from "@/lib/ui";
 import type { CategoryRecord } from "@/lib/types";
 
 type Props = {
@@ -22,8 +23,7 @@ type Props = {
   defaultOpen?: boolean;
 };
 
-const inputClassName =
-  "rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 outline-none ring-sky-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50";
+const inputClassName = formInputClass({ accent: "sky", size: "sm" });
 
 export function CategoryManager({
   categories,

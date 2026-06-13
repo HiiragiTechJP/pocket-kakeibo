@@ -2,16 +2,17 @@
 
 import { useMemo } from "react";
 import { AddIncomeForm } from "@/components/add-income-form";
-import { AppErrorBanner } from "@/components/app-error-banner";
+import { AppPage } from "@/components/app-page";
 import { IncomeList } from "@/components/income-list";
 import { MonthPicker } from "@/components/month-picker";
+import { YenAmount } from "@/components/yen-amount";
 import { useKakeiboData } from "@/contexts/kakeibo-data-context";
 import { useSelectedMonth } from "@/hooks/use-selected-month";
 import {
-  calculateExpenseTotal,
+  calculateAmountTotal,
   filterIncomesByMonth,
 } from "@/lib/expense-summary";
-import { formatMonthJa, formatYen } from "@/lib/format";
+import { formatMonthJa } from "@/lib/format";
 
 export function IncomePage() {
   const { incomes, isReady } = useKakeiboData();
@@ -23,32 +24,28 @@ export function IncomePage() {
   );
 
   const monthlyIncomeTotal = useMemo(
-    () => calculateExpenseTotal(monthlyIncomes),
+    () => calculateAmountTotal(monthlyIncomes),
     [monthlyIncomes],
   );
 
   const selectedMonthLabel = formatMonthJa(selectedMonth);
 
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-col gap-5">
-      <AppErrorBanner />
-
-      <section className="flex items-center justify-between gap-3">
-        <div>
+    <AppPage>
+      <section className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
             収入
           </h2>
-          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             {selectedMonthLabel}
-            {isReady ? (
-              <>
-                {" · "}
-                <span className="font-medium text-emerald-700 dark:text-emerald-300">
-                  {formatYen(monthlyIncomeTotal)}
-                </span>
-              </>
-            ) : null}
           </p>
+          {isReady ? (
+            <YenAmount
+              amount={monthlyIncomeTotal}
+              className="mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-300"
+            />
+          ) : null}
         </div>
         <MonthPicker
           selectedMonth={selectedMonth}
@@ -72,6 +69,6 @@ export function IncomePage() {
         updatingId={incomes.updatingId}
         deletingId={incomes.deletingId}
       />
-    </main>
+    </AppPage>
   );
 }

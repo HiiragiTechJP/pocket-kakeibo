@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { getMonthDefaultDate } from "@/lib/format";
+import { formInputClass } from "@/lib/ui";
 import type { IncomeInsert } from "@/lib/types";
 
 type Props = {
@@ -10,8 +11,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const inputClassName =
-  "rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-slate-900 outline-none ring-emerald-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50";
+const inputClassName = formInputClass({ accent: "emerald" });
 
 export function AddIncomeForm({
   onAdd,

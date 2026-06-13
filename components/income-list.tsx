@@ -2,14 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { EditIncomeForm } from "@/components/edit-income-form";
-import { calculateExpenseTotal } from "@/lib/expense-summary";
+import { calculateAmountTotal } from "@/lib/expense-summary";
 import { formatDateJa, formatYen } from "@/lib/format";
+import { getIncomeLabel } from "@/lib/incomes";
 import type { IncomeRecord, IncomeUpdate } from "@/lib/types";
-
-function getIncomeLabel(income: IncomeRecord): string {
-  const trimmed = income.memo?.trim();
-  return trimmed && trimmed.length > 0 ? trimmed : "収入";
-}
 
 type Props = {
   incomes: IncomeRecord[];
@@ -33,12 +29,12 @@ export function IncomeList({
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const totalAmount = useMemo(
-    () => calculateExpenseTotal(incomes),
+    () => calculateAmountTotal(incomes),
     [incomes],
   );
 
   async function handleDelete(income: IncomeRecord) {
-    const label = getIncomeLabel(income);
+    const label = getIncomeLabel(income.memo);
     const confirmed = window.confirm(
       `${label}（${formatYen(income.amount)}）を削除しますか？`,
     );
@@ -87,7 +83,7 @@ export function IncomeList({
       ) : (
         <ul className="divide-y divide-slate-100 dark:divide-slate-800">
           {incomes.map((income) => {
-            const label = getIncomeLabel(income);
+            const label = getIncomeLabel(income.memo);
             const isEditing = editingId === income.id;
             const isDeleting = deletingId === income.id;
             const isSavingThis = updatingId === income.id;

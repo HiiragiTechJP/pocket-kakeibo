@@ -1,15 +1,12 @@
+export function formatYenNumber(amount: number): string {
+  return new Intl.NumberFormat("ja-JP").format(Math.abs(amount));
+}
+
+/** 確認ダイアログなど文字列向け（マイナスは ￥ -15,069） */
 export function formatYen(amount: number): string {
-  const formatter = new Intl.NumberFormat("ja-JP", {
-    style: "currency",
-    currency: "JPY",
-  });
-
-  if (amount < 0) {
-    const positive = formatter.format(-amount);
-    return positive.replace(/^(\uFFE5|\u00A5)/, "$&-");
-  }
-
-  return formatter.format(amount);
+  const number = formatYenNumber(amount);
+  if (amount < 0) return `￥ -${number}`;
+  return `￥${number}`;
 }
 
 export function formatDateJa(isoDate: string): string {

@@ -1,7 +1,10 @@
+import { AppPage } from "@/components/app-page";
+import { cardClassName } from "@/lib/ui";
+
 export function ChartsPage() {
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-col gap-5">
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-md shadow-slate-200/70 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-950/30">
+    <AppPage>
+      <section className={cardClassName}>
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
           分析
         </h2>
@@ -17,6 +20,6 @@ export function ChartsPage() {
           </p>
         </div>
       </section>
-    </main>
+    </AppPage>
   );
 }

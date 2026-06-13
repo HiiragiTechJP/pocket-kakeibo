@@ -37,9 +37,7 @@ export function calculateMonthlyBalance(
   return incomeTotal - expenseTotal;
 }
 
-export function calculateExpenseTotal(
-  items: { amount: number }[],
-): number {
+export function calculateAmountTotal(items: { amount: number }[]): number {
   return items.reduce((sum, item) => sum + item.amount, 0);
 }
 

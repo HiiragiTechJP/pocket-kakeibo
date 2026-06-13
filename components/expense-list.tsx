@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { EditExpenseForm } from "@/components/edit-expense-form";
 import { getCategoryById } from "@/lib/categories";
 import {
-  calculateExpenseTotal,
+  calculateAmountTotal,
   filterExpensesByCategory,
 } from "@/lib/expense-summary";
 import { formatDateJa, formatYen } from "@/lib/format";
@@ -51,7 +51,7 @@ export function ExpenseList({
   );
 
   const filteredTotal = useMemo(
-    () => calculateExpenseTotal(filteredExpenses),
+    () => calculateAmountTotal(filteredExpenses),
     [filteredExpenses],
   );
 

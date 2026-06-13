@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { formInputClass } from "@/lib/ui";
 import type { IncomeRecord, IncomeUpdate } from "@/lib/types";
 
 type Props = {
@@ -10,8 +11,11 @@ type Props = {
   isSaving: boolean;
 };
 
-const inputClassName =
-  "w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-slate-900 outline-none ring-emerald-500 focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50";
+const inputClassName = formInputClass({
+  accent: "emerald",
+  size: "sm",
+  fullWidth: true,
+});
 
 export function EditIncomeForm({
   income,

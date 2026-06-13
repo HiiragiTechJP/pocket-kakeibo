@@ -1,6 +1,7 @@
 "use client";
 
 import { MonthPicker } from "@/components/month-picker";
+import { YenAmount } from "@/components/yen-amount";
 import type { CategorySummaryItem } from "@/lib/expense-summary";
 import { formatMonthJa, formatYen } from "@/lib/format";
 
@@ -32,43 +33,51 @@ export function MonthlySummaryCard({
   const selectedMonthLabel = formatMonthJa(selectedMonth);
 
   return (
-    <section className="rounded-2xl bg-gradient-to-br from-sky-700 via-cyan-700 to-teal-600 px-5 py-5 text-white shadow-lg shadow-sky-200/70 dark:from-sky-800 dark:via-cyan-800 dark:to-teal-700 dark:shadow-slate-950/50">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-white/80">
-            {selectedMonthLabel}の収支
-          </p>
-          <p
-            className={`mt-1 whitespace-nowrap text-3xl font-bold tabular-nums tracking-tight ${
-              isReady && balance < 0 ? "text-amber-100" : ""
-            }`}
-          >
-            {isReady ? formatYen(balance) : "—"}
-          </p>
-          <div className="mt-2 flex flex-col gap-1 text-sm text-white/80 sm:flex-row sm:flex-wrap sm:gap-x-4 sm:gap-y-1">
-            <span className="whitespace-nowrap">
-              収入{" "}
-              <span className="font-medium text-white">
-                {isReady ? formatYen(incomeTotal) : "—"}
-              </span>
-              {isReady ? ` · ${incomeCount}件` : null}
-            </span>
-            <span className="whitespace-nowrap">
-              支出{" "}
-              <span className="font-medium text-white">
-                {isReady ? formatYen(expenseTotal) : "—"}
-              </span>
-              {isReady ? ` · ${expenseCount}件` : null}
-            </span>
-          </div>
-        </div>
-
+    <section className="rounded-2xl bg-gradient-to-br from-sky-700 via-cyan-700 to-teal-600 px-4 py-5 text-white shadow-lg shadow-sky-200/70 sm:px-5 dark:from-sky-800 dark:via-cyan-800 dark:to-teal-700 dark:shadow-slate-950/50">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm font-medium text-white/80">
+          {selectedMonthLabel}の収支
+        </p>
         <MonthPicker
           selectedMonth={selectedMonth}
           currentMonth={currentMonth}
           onChange={onMonthChange}
           variant="card"
         />
+      </div>
+
+      <div className="mt-2 min-w-0">
+        {isReady ? (
+          <YenAmount
+            amount={balance}
+            className={`text-[clamp(1.625rem,7vw,1.875rem)] font-bold ${
+              balance < 0 ? "text-amber-100" : ""
+            }`}
+          />
+        ) : (
+          <p className="text-3xl font-bold">—</p>
+        )}
+      </div>
+
+      <div className="mt-3 flex flex-col gap-1.5 text-sm text-white/80">
+        <p className="whitespace-nowrap">
+          収入{" "}
+          <span className="font-medium text-white">
+            {isReady ? formatYen(incomeTotal) : "—"}
+          </span>
+          {isReady ? (
+            <span className="text-white/70">{` · ${incomeCount}件`}</span>
+          ) : null}
+        </p>
+        <p className="whitespace-nowrap">
+          支出{" "}
+          <span className="font-medium text-white">
+            {isReady ? formatYen(expenseTotal) : "—"}
+          </span>
+          {isReady ? (
+            <span className="text-white/70">{` · ${expenseCount}件`}</span>
+          ) : null}
+        </p>
       </div>
 
       <div className="mt-4 rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
@@ -86,8 +95,10 @@ export function MonthlySummaryCard({
                 key={category.id}
                 className="flex items-center justify-between gap-3 text-sm"
               >
-                <span className="text-white/90">{category.name}</span>
-                <span className="font-semibold tabular-nums text-white">
+                <span className="min-w-0 truncate text-white/90">
+                  {category.name}
+                </span>
+                <span className="shrink-0 font-semibold tabular-nums text-white">
                   {formatYen(category.amount)}
                 </span>
               </li>
