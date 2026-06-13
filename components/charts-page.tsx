@@ -108,37 +108,72 @@ export function ChartsPage() {
           </div>
         ) : (
           <>
-            <dl className="mt-5 grid grid-cols-3 gap-2 rounded-xl bg-slate-50 px-3 py-3 dark:bg-slate-800/40">
-              <div>
-                <dt className="text-[11px] text-slate-500 dark:text-slate-400">
-                  収入
-                </dt>
-                <dd className="mt-0.5 text-xs font-semibold tabular-nums text-emerald-700 sm:text-sm dark:text-emerald-300">
-                  {formatYen(totals.incomeTotal)}
-                </dd>
+            <dl className="mt-5 space-y-3 rounded-xl bg-slate-50 px-3 py-3 dark:bg-slate-800/40">
+              <div className="grid grid-cols-3 gap-2">
+                <div>
+                  <dt className="text-[11px] text-slate-500 dark:text-slate-400">
+                    収入
+                  </dt>
+                  <dd className="mt-0.5 text-xs font-semibold tabular-nums text-emerald-700 sm:text-sm dark:text-emerald-300">
+                    {formatYen(totals.incomeTotal)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-slate-500 dark:text-slate-400">
+                    支出
+                  </dt>
+                  <dd className="mt-0.5 text-xs font-semibold tabular-nums text-sky-700 sm:text-sm dark:text-sky-300">
+                    {formatYen(totals.expenseTotal)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-slate-500 dark:text-slate-400">
+                    収支
+                  </dt>
+                  <dd className="mt-0.5">
+                    <YenAmount
+                      amount={totals.balance}
+                      className={`text-xs font-semibold sm:text-sm ${
+                        totals.balance < 0
+                          ? "text-amber-700 dark:text-amber-300"
+                          : "text-slate-900 dark:text-slate-50"
+                      }`}
+                    />
+                  </dd>
+                </div>
               </div>
-              <div>
-                <dt className="text-[11px] text-slate-500 dark:text-slate-400">
-                  支出
-                </dt>
-                <dd className="mt-0.5 text-xs font-semibold tabular-nums text-sky-700 sm:text-sm dark:text-sky-300">
-                  {formatYen(totals.expenseTotal)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[11px] text-slate-500 dark:text-slate-400">
-                  収支
-                </dt>
-                <dd className="mt-0.5">
-                  <YenAmount
-                    amount={totals.balance}
-                    className={`text-xs font-semibold sm:text-sm ${
-                      totals.balance < 0
-                        ? "text-amber-700 dark:text-amber-300"
-                        : "text-slate-900 dark:text-slate-50"
-                    }`}
-                  />
-                </dd>
+              <div className="grid grid-cols-3 gap-2 border-t border-slate-200/80 pt-3 dark:border-slate-700/80">
+                <div>
+                  <dt className="text-[11px] text-slate-500 dark:text-slate-400">
+                    月平均収入
+                  </dt>
+                  <dd className="mt-0.5 text-xs font-semibold tabular-nums text-emerald-700 sm:text-sm dark:text-emerald-300">
+                    {formatYen(totals.incomeAverage)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-slate-500 dark:text-slate-400">
+                    月平均支出
+                  </dt>
+                  <dd className="mt-0.5 text-xs font-semibold tabular-nums text-sky-700 sm:text-sm dark:text-sky-300">
+                    {formatYen(totals.expenseAverage)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[11px] text-slate-500 dark:text-slate-400">
+                    月平均収支
+                  </dt>
+                  <dd className="mt-0.5">
+                    <YenAmount
+                      amount={totals.balanceAverage}
+                      className={`text-xs font-semibold sm:text-sm ${
+                        totals.balanceAverage < 0
+                          ? "text-amber-700 dark:text-amber-300"
+                          : "text-slate-900 dark:text-slate-50"
+                      }`}
+                    />
+                  </dd>
+                </div>
               </div>
             </dl>
 
@@ -160,11 +195,6 @@ export function ChartsPage() {
                   この期間の支出はまだありません
                 </p>
               )}
-              {hasExpenseData ? (
-                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-                  月平均 {formatYen(totals.expenseAverage)}
-                </p>
-              ) : null}
             </ChartSection>
 
             <ChartSection title="月別の収入・支出">

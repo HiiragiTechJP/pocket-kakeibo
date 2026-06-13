@@ -28,6 +28,8 @@ export type PeriodTotals = {
   incomeTotal: number;
   balance: number;
   expenseAverage: number;
+  incomeAverage: number;
+  balanceAverage: number;
 };
 
 export const CATEGORY_CHART_COLORS = [
@@ -192,6 +194,8 @@ export function getPeriodTotals(series: MonthlyChartPoint[]): PeriodTotals {
     incomeTotal,
     balance: incomeTotal - expenseTotal,
     expenseAverage: Math.round(expenseTotal / count),
+    incomeAverage: Math.round(incomeTotal / count),
+    balanceAverage: Math.round((incomeTotal - expenseTotal) / count),
   };
 }
 
