@@ -7,7 +7,7 @@ import { IncomeList } from "@/components/income-list";
 import { MonthPicker } from "@/components/month-picker";
 import { YenAmount } from "@/components/yen-amount";
 import { useKakeiboData } from "@/contexts/kakeibo-data-context";
-import { useSelectedMonth } from "@/hooks/use-selected-month";
+import { useSelectedMonth } from "@/contexts/selected-month-context";
 import {
   calculateAmountTotal,
   filterIncomesByMonth,

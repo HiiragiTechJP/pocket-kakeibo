@@ -6,7 +6,7 @@ import { ExpenseList } from "@/components/expense-list";
 import { MonthlySummaryCard } from "@/components/monthly-summary-card";
 import { useKakeiboData } from "@/contexts/kakeibo-data-context";
 import { useMonthlyOverview } from "@/hooks/use-monthly-overview";
-import { useSelectedMonth } from "@/hooks/use-selected-month";
+import { useSelectedMonth } from "@/contexts/selected-month-context";
 import { formatMonthJa } from "@/lib/format";
 
 export function HomePage() {

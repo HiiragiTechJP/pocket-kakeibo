@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { TabIcon, type TabIconId } from "@/components/tab-icons";
-import { useSelectedMonth } from "@/hooks/use-selected-month";
+import { useSelectedMonth } from "@/contexts/selected-month-context";
 
 type TabConfig = {
   href: string;
