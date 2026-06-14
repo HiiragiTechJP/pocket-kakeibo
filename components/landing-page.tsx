@@ -1,22 +1,55 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const features = [
+const appTabs = [
   {
-    title: "スマホでサッと入力",
-    description: "金額・カテゴリ・日付を素早く記録。毎日の支出管理に使いやすいシンプルな画面です。",
+    label: "ホーム",
+    description: "月別の収支と支出記録",
   },
   {
-    title: "月別で支出を確認",
-    description: "月ごとの合計とカテゴリ別の内訳を確認できます。今月の使いすぎも見えやすくなります。",
+    label: "収入",
+    description: "収入の追加・一覧",
+  },
+  {
+    label: "分析",
+    description: "期間指定のグラフ",
+  },
+  {
+    label: "設定",
+    description: "カテゴリ・アカウント",
+  },
+];
+
+const features = [
+  {
+    title: "支出・収入をサッと記録",
+    description:
+      "金額・カテゴリ・日付を素早く入力。支出はホームから、収入は専用タブから記録できます。",
+  },
+  {
+    title: "月別の収支を確認",
+    description:
+      "ホーム画面で月ごとの収入・支出・収支と、カテゴリ別の支出内訳を一覧できます。",
+  },
+  {
+    title: "期間を指定して分析",
+    description:
+      "分析タブで3/6/12ヶ月や任意の期間を選び、カテゴリ別の割合や月別の推移をグラフで確認できます。",
+  },
+  {
+    title: "カテゴリを自由に設定",
+    description:
+      "ユーザーごとにカテゴリを追加・編集・並び替え。自分の生活に合わせて整理できます。",
   },
   {
     title: "メモ付きで記録",
-    description: "「ランチ」「スーパー」など、後から見返したい内容をメモとして残せます。",
+    description:
+      "「ランチ」「スーパー」など、後から見返したい内容をメモとして残せます。",
   },
   {
     title: "ログインでデータを保存",
-    description: "メール確認コードでログイン。あなたの支出データを安全にクラウド保存します。",
+    description:
+      "メール確認コードでログイン。あなたのデータを安全にクラウド保存します。",
   },
 ];
 
@@ -43,8 +76,8 @@ export function LandingPage() {
             ポケット家計簿
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
-            毎日の支出を、スマホからシンプルに記録できる無料の家計簿アプリです。
-            月別表示・カテゴリ集計・メモ入力に対応しています。
+            毎日の支出と収入を、スマホからシンプルに記録できる無料の家計簿アプリです。
+            月別の収支確認・カテゴリ別分析・期間を指定したグラフ表示に対応しています。
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -66,6 +99,27 @@ export function LandingPage() {
             ブラウザからそのまま使えます。スマホならホーム画面に追加も可能です。
           </p>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-4 pb-12">
+        <h2 className="mb-4 text-center text-xl font-semibold text-slate-900 dark:text-slate-50">
+          4つのタブで整理
+        </h2>
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {appTabs.map((tab) => (
+            <li
+              key={tab.label}
+              className="rounded-2xl border border-slate-200 bg-white px-4 py-4 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900"
+            >
+              <p className="font-semibold text-slate-900 dark:text-slate-50">
+                {tab.label}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                {tab.description}
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section id="features" className="mx-auto max-w-4xl px-4 pb-16">
