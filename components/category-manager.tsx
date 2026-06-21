@@ -23,7 +23,7 @@ type Props = {
   defaultOpen?: boolean;
 };
 
-const inputClassName = formInputClass({ accent: "sky", size: "sm" });
+const inputClassName = `${formInputClass({ accent: "sky" })} text-base`;
 
 export function CategoryManager({
   categories,
